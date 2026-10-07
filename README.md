@@ -105,3 +105,7 @@ Developed as a **Bachelor of Computer Science** project at **Aria University, Af
 **Year:** 2022  
 **Author:** Sebghatullah Yarzada  
 **Supervisor:** Dr. Yama Ramin
+
+## License
+
+This project is not open source. The repository is available only to showcase the work for academic and portfolio purposes. The code and project materials may not be copied, reused, or redistributed without permission.
