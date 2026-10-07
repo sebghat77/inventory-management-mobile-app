@@ -1,36 +1,33 @@
-# Project Evidence
+# Project Summary
 
-This repository is based on the original 2022 bachelor project **Inventory Management Mobile App** by Sebghatullah Yarzada at Aria University.
+**Inventory Management Mobile App** is a Bachelor of Computer Science project developed by **Sebghatullah Yarzada** at **Aria University** in 2022.
 
-## Preserved material
+## Project Scope
 
-The repository contains:
+The application combines inventory management with business monitoring in a Flutter mobile client backed by Firebase services.
 
-- the complete sanitized bachelor report;
-- original project screenshots;
-- Flutter/Dart code excerpts taken from the report;
-- architecture and workflow notes based on the preserved implementation.
+Implemented areas represented in this repository include:
 
-The student number was removed from the public report. The project content itself was not rewritten.
+- Flutter and Dart application components
+- Firebase Authentication
+- Firebase Firestore cloud data
+- authenticated, user-scoped data paths
+- inventory items, quantities and cost information
+- stock transactions and inventory updates
+- sales and sales history
+- expense tracking
+- transaction history
+- daily, weekly, monthly and yearly business views
 
-## What is directly supported by the report and code
+## Technical Focus
 
-The preserved material shows:
+The project demonstrates the connection between mobile UI, cloud persistence and business logic. Firestore stores user-specific operational data, while Flutter components provide data entry, search, navigation, history and time-based business views.
 
-- Flutter and Dart application code;
-- Firebase Firestore for cloud data;
-- authenticated, user-scoped data paths;
-- inventory items and quantities;
-- stock transactions and inventory updates;
-- sales and sales history;
-- expenses;
-- transaction history;
-- daily, weekly, monthly and yearly business views.
+## Repository Contents
 
-One report section discusses SQLite during early system analysis, while the project-specific implementation and source excerpts use **Firebase Firestore**. This repository therefore describes the implemented system as Firestore-backed.
+The repository includes application screenshots, implementation examples, architecture documentation, workflow documentation and the academic project report.
 
-## Source-code scope
-
-The original full development repository is no longer available. The files in `source-extracts/` are selected code excerpts recovered from the submitted report.
-
-The repository does not recreate missing source files, old commits or implementation details that are not supported by the original material.
+- [Architecture](ARCHITECTURE.md)
+- [Application workflows](WORKFLOWS.md)
+- [Implementation highlights](CODE_INDEX.md)
+- [Academic report](report-parts/README.md)

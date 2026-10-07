@@ -1,105 +1,84 @@
 # Architecture
 
-This document explains the architecture evidenced by the bachelor project report and the source code preserved in this repository.
+## System Overview
 
-## High-level view
+The application uses a Flutter/Dart client connected to Firebase Authentication and Firebase Firestore. Business data is scoped to the authenticated user and organized around inventory, sales, transactions and expenses.
 
-```mermaid
+~~~mermaid
 flowchart TB
     A[Authenticated User] --> B[Flutter / Dart Client]
     B --> C[Firebase Authentication]
     B --> D[(Firebase Firestore)]
-
-    D --> E[Item / Inventory Data]
-    D --> F[Sales Records]
-    D --> G[Transaction Records]
-    D --> H[Expense & related business data]
-
-    E --> I[Current State]
+    D --> E[Inventory]
+    D --> F[Sales]
+    D --> G[Transactions]
+    D --> H[Expenses]
+    E --> I[Current Business State]
     F --> I
     G --> I
     H --> I
-
     I --> J[Search & History]
     I --> K[Daily / Weekly / Monthly / Yearly Overview]
-```
+~~~
 
-## Design intent
+## Design
 
-The system was conceived for remote business visibility. The client should allow a shop or warehouse owner to inspect recorded stock, sales, expenses, and monetary activity without needing to physically reconstruct the business state every time.
+The system connects operational events with the current business state rather than treating inventory as a standalone list. Stock entries, sales, expenses and other transactions contribute to a unified view of business activity.
 
-The important design idea is that inventory is not treated as an isolated list. Business events are recorded and connected to the current state.
+## Authentication & User-Scoped Data
 
-## User-scoped data
+The application uses the authenticated Firebase user ID to scope Firestore data:
 
-Recovered code repeatedly uses the authenticated user identifier:
-
-```dart
+~~~dart
 FirebaseAuth.instance.currentUser!.uid
-```
+~~~
 
-Firestore paths visible in the report include patterns such as:
+Example collection paths used by the application:
 
-```text
+~~~text
 Iusers/{uid}/Item
 Iusers/{uid}/Sales
 Iusers/{uid}/Transactions
-```
+~~~
 
-This is evidence that data is stored per signed-in account.
+This structure separates business data by signed-in account and supports access across devices.
 
-## Inventory read flow
+## Inventory Read Flow
 
-The preserved `ItemHistory` implementation creates a Firestore snapshot stream and renders it with Flutter `StreamBuilder`.
+Inventory views subscribe to Firestore snapshot streams and render updates through Flutter.
 
-```mermaid
+~~~mermaid
 sequenceDiagram
     participant U as User
     participant A as Flutter UI
     participant F as Firestore
-
     U->>A: Open inventory/history
     A->>F: Subscribe to Item collection
     F-->>A: QuerySnapshot
     A-->>U: Render item cards
     F-->>A: Updated snapshot
     A-->>U: Refresh displayed state
-```
+~~~
 
-## Stock-entry write flow
+## Stock Update Flow
 
-A preserved section of the report shows a business event being recorded in the `Transactions` collection and then the corresponding inventory item being located and updated.
+Incoming stock is recorded as a business transaction and then reflected in the matching inventory item.
 
-```mermaid
+~~~mermaid
 sequenceDiagram
     participant U as User
     participant A as Flutter UI
     participant T as Transactions
     participant I as Item
-
-    U->>A: Enter received/bought stock
+    U->>A: Enter received stock
     A->>T: Add transaction record
     A->>I: Find matching item
     A->>I: Increment quantity / total cost
     I-->>A: Updated inventory state
-```
+~~~
 
-The code uses Firestore operations including:
+Key Firestore operations include `add(...)`, `where(...)`, `update(...)` and `FieldValue.increment(...)`.
 
-- `add(...)`
-- `where(...)`
-- `update(...)`
-- `FieldValue.increment(...)`
+## Business History & Monitoring
 
-## History and monitoring
-
-The report contains timestamp-ordered sales history and time-based transaction views. A preserved weekly query filters transaction data by `dateTime`, while the UI screenshots show today, weekly, monthly, and yearly business overviews.
-
-This architecture supports two complementary views:
-
-1. **current state** — what the recorded inventory/business state is now;
-2. **history** — how that state was reached through recorded business events.
-
-## Public repository boundary
-
-The full bachelor report is preserved in `docs/` as a sanitized public artifact. The original development repository is not represented as fully recovered, so the architecture described above remains limited to what is directly evidenced by the report, original screenshots, and selected report-derived source excerpts.
+Timestamped records support both current-state and historical views. Date-based queries power daily, weekly, monthly and yearly monitoring, allowing the application to show both the current recorded state and the business events that produced it.
